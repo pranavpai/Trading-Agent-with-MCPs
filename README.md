@@ -1,1 +1,506 @@
-# Trading-Agent-with-MCPs
+# 🤖 Trading Agent with MCPs
+
+<div align="center">
+
+[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Gradio](https://img.shields.io/badge/Gradio-5.22+-orange.svg)](https://gradio.app/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green.svg)](https://openai.com/)
+[![UV](https://img.shields.io/badge/uv-package%20manager-purple.svg)](https://docs.astral.sh/uv/)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-red.svg)](https://modelcontextprotocol.io/)
+
+**🔴 LIVE AI Trading Agents with Real-Time Streaming Dashboard**
+
+*Four unique AI personalities trading autonomously with professional-grade tools*
+
+[🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [📖 Documentation](#-documentation) • [🤝 Contributing](#-contributing)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🤖 AI Trading Agents](#-ai-trading-agents)
+- [⚙️ Installation Guide](#️-installation-guide)
+- [🔧 Configuration](#-configuration)
+- [🎯 Usage Examples](#-usage-examples)
+- [📊 Live Demo](#-live-demo)
+- [🛠️ MCP Servers](#️-mcp-servers)
+- [🔗 API Integrations](#-api-integrations)
+- [📖 Documentation](#-documentation)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
+---
+
+## ✨ Features
+
+### 🤖 **AI-Powered Trading Agents**
+- **4 Unique Personalities**: Warren (Value), George (Contrarian), Ray (Systematic), Cathie (Innovation)
+- **Real-time Decision Making**: Every 10 seconds to 1 hour (configurable)
+- **Professional-grade Analysis**: Technical indicators, pattern recognition, risk management
+
+### 📊 **Live Streaming Dashboard**
+- **Real-time Updates**: Logs stream every 1s, portfolio every 3s, charts every 5s
+- **Dual-view Interface**: Trading activity + MCP tool calls
+- **Interactive Charts**: Portfolio performance, holdings, transaction history
+- **Status Monitoring**: Live system health and performance metrics
+
+### 🛠️ **Advanced MCP Integration**
+- **MCP-Trader Server**: Custom technical analysis tools
+- **Account Management**: Real-time balance and position tracking
+- **Market Data**: Multiple data providers with fallback support
+- **Notification System**: Mobile alerts via Pushover
+
+### 🔧 **Production Ready**
+- **UV Package Manager**: Fast, reliable dependency management
+- **Database Persistence**: SQLite with real-time logging
+- **Error Handling**: Robust fallback mechanisms
+- **Real-time Monitoring**: System health and performance metrics
+
+---
+
+## 🚀 Quick Start
+
+Get up and running in under 5 minutes:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+cd Trading-Agent-with-MCPs
+
+# 2. Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 3. Set up environment
+cp .env.example .env
+# Edit .env with your API keys (see Configuration section)
+
+# 4. Install dependencies and run
+uv sync
+uv run python app.py        # Start the dashboard
+uv run python trading_floor.py  # Start trading (in another terminal)
+
+# 5. Open your browser
+open http://127.0.0.1:7860
+```
+
+> 🎯 **First Time?** Check out our [Detailed Installation Guide](#️-installation-guide) below!
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TB
+    subgraph "🌐 User Interface"
+        UI[🖥️ Gradio Dashboard<br/>Real-time Streaming UI]
+        UI --> |WebSocket Updates| TIMER[⏰ Multi-tier Timers<br/>1s/3s/5s intervals]
+    end
+    
+    subgraph "🤖 AI Trading Agents"
+        WARREN[👨‍💼 Warren<br/>Value Investor]
+        GEORGE[🎯 George<br/>Contrarian Trader] 
+        RAY[📊 Ray<br/>Systematic Trader]
+        CATHIE[🚀 Cathie<br/>Innovation Trader]
+    end
+    
+    subgraph "🛠️ MCP Servers"
+        MCP_TRADER[📈 MCP-Trader<br/>Technical Analysis]
+        MCP_ACCOUNTS[💰 Accounts<br/>Balance & Positions]
+        MCP_MARKET[📊 Market Data<br/>Prices & News]
+        MCP_PUSH[📱 Notifications<br/>Alerts & Reports]
+    end
+    
+    subgraph "💾 Data Layer"
+        DB[(🗄️ SQLite Database<br/>Accounts & Logs)]
+        CACHE[⚡ Memory Cache<br/>Market Data]
+    end
+    
+    subgraph "🌍 External APIs"
+        OPENAI[🤖 OpenAI<br/>GPT-4 Models]
+        POLYGON[📈 Polygon.io<br/>Market Data]
+        TIINGO[💹 Tiingo<br/>Financial Data]
+        BRAVE[🔍 Brave Search<br/>News & Research]
+        PUSHOVER[📱 Pushover<br/>Mobile Alerts]
+    end
+    
+    %% Main Flow
+    UI --> WARREN & GEORGE & RAY & CATHIE
+    WARREN & GEORGE & RAY & CATHIE --> MCP_TRADER & MCP_ACCOUNTS & MCP_MARKET & MCP_PUSH
+    
+    %% MCP Connections
+    MCP_TRADER --> TIINGO & POLYGON
+    MCP_ACCOUNTS --> DB
+    MCP_MARKET --> POLYGON & CACHE
+    MCP_PUSH --> PUSHOVER
+    
+    %% AI Connections
+    WARREN & GEORGE & RAY & CATHIE --> OPENAI
+    WARREN & GEORGE & RAY & CATHIE --> BRAVE
+    
+    %% Data Persistence
+    MCP_ACCOUNTS --> DB
+    UI --> DB
+    
+    %% Styling
+    classDef aiAgent fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef mcpServer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef data fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef ui fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class WARREN,GEORGE,RAY,CATHIE aiAgent
+    class MCP_TRADER,MCP_ACCOUNTS,MCP_MARKET,MCP_PUSH mcpServer
+    class OPENAI,POLYGON,TIINGO,BRAVE,PUSHOVER external
+    class DB,CACHE data
+    class UI,TIMER ui
+```
+
+### 🔄 **Data Flow**
+
+1. **🎯 Trigger**: Timer triggers trading cycle (configurable frequency)
+2. **🧠 Research**: AI agents research markets via Brave Search + financial APIs
+3. **📊 Analysis**: MCP-Trader provides technical analysis and risk metrics
+4. **💭 Decision**: GPT-4 processes data and makes trading decisions
+5. **💰 Execution**: Account MCP executes trades and updates balances
+6. **📱 Notification**: Push notifications sent for significant events
+7. **🖥️ Display**: Real-time UI updates show all activity live
+
+---
+
+## 🤖 AI Trading Agents
+
+Each agent has a unique personality and trading approach:
+
+### 👨‍💼 **Warren - The Value Investor**
+- **Philosophy**: "Price is what you pay, value is what you get"
+- **Strategy**: Long-term value investing, dividend stocks, defensive picks
+- **Tools**: Fundamental analysis + technical confirmation
+- **Risk**: Conservative, focuses on preserving capital
+
+### 🎯 **George - The Contrarian**
+- **Philosophy**: "Be greedy when others are fearful"
+- **Strategy**: Contrarian plays, macro trades, bold bets
+- **Tools**: Sentiment analysis + oversold technical signals
+- **Risk**: Aggressive, wide stops for contrarian positions
+
+### 📊 **Ray - The Systematic**
+- **Philosophy**: "Systematic rules remove emotion from trading"
+- **Strategy**: Diversified ETFs, risk-parity, systematic rebalancing
+- **Tools**: Technical indicators + systematic entry/exit rules
+- **Risk**: Balanced, risk-adjusted position sizing
+
+### 🚀 **Cathie - The Innovator**
+- **Philosophy**: "Innovation creates explosive growth opportunities"
+- **Strategy**: Growth stocks, crypto, breakthrough technologies
+- **Tools**: Momentum analysis + innovation thesis research
+- **Risk**: High volatility tolerance, innovation-focused stops
+
+---
+
+## ⚙️ Installation Guide
+
+### 📋 **Prerequisites**
+
+- **Python 3.12+** - [Download Python](https://www.python.org/downloads/)
+- **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **Git** - [Install Git](https://git-scm.com/downloads)
+
+### 🛠️ **Step-by-Step Installation**
+
+#### 1️⃣ **Clone Repository**
+```bash
+git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+cd Trading-Agent-with-MCPs
+```
+
+#### 2️⃣ **Install UV (if needed)**
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
+
+#### 3️⃣ **Set Up Environment**
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit with your API keys
+nano .env  # or use your preferred editor
+```
+
+#### 4️⃣ **Install Dependencies**
+```bash
+# Sync all dependencies (fast!)
+uv sync
+
+# Verify installation
+uv run python -c "print('✅ Installation successful!')"
+```
+
+#### 5️⃣ **Initialize Database**
+```bash
+# Reset/initialize trading accounts
+uv run python reset.py
+```
+
+---
+
+## 🔧 Configuration
+
+### 🔑 **Required API Keys**
+
+Get your free API keys from these providers:
+
+| Service | Purpose | Link | Required |
+|---------|---------|------|----------|
+| 🤖 **OpenAI** | AI trading agents | [Get API Key](https://platform.openai.com/api-keys) | ✅ **Yes** |
+| 📊 **Polygon.io** | Real-time market data | [Get API Key](https://polygon.io/dashboard/api-keys) | ✅ **Yes** |
+| 💹 **Tiingo** | Technical analysis data | [Get API Key](https://api.tiingo.com/account/token) | ✅ **Yes** |
+| 🔍 **Brave Search** | Market research | [Get API Key](https://api.search.brave.com/app/keys) | ✅ **Yes** |
+| 📱 **Pushover** | Mobile notifications | [Get Credentials](https://pushover.net/apps/build) | ⚪ Optional |
+
+### ⚙️ **Trading Configuration**
+
+Customize your trading behavior in `.env`:
+
+```bash
+# Trading frequency (in minutes)
+RUN_EVERY_N_MINUTES=60        # Trade every hour
+
+# Examples:
+# RUN_EVERY_N_MINUTES=1440     # Once per day
+# RUN_EVERY_N_MINUTES=10       # Every 10 minutes  
+# RUN_EVERY_N_MINUTES=0.167    # Every 10 seconds (testing)
+
+# Market hours
+RUN_EVEN_WHEN_MARKET_IS_CLOSED=false  # false = only during market hours
+```
+
+---
+
+## 🎯 Usage Examples
+
+### 🚀 **Basic Usage**
+
+```bash
+# Terminal 1: Start the real-time dashboard
+uv run python app.py
+
+# Terminal 2: Start the trading engine
+uv run python trading_floor.py
+
+# Open browser to http://127.0.0.1:7860
+```
+
+### 🔧 **Advanced Usage**
+
+```bash
+# Reset accounts to $10,000 each
+uv run python reset.py
+
+# Run with custom configuration
+RUN_EVERY_N_MINUTES=30 uv run python trading_floor.py
+
+# Debug mode with verbose output
+uv run python trading_floor.py
+```
+
+### 📊 **Testing & Development**
+
+```bash
+# Rapid testing (trades every 10 seconds)
+echo "RUN_EVERY_N_MINUTES=0.167" >> .env
+echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=true" >> .env
+uv run python trading_floor.py
+
+# Production settings (trades every hour during market hours)
+echo "RUN_EVERY_N_MINUTES=60" > .env
+echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=false" >> .env
+```
+
+---
+
+## 📊 Live Demo
+
+### 🖥️ **Dashboard Features**
+
+- **📈 Real-time Portfolio Charts**: Live P&L tracking with interactive plots
+- **💰 Account Balances**: Current cash + position values with color-coded P&L
+- **📋 Holdings Table**: Real-time position updates with quantities
+- **📜 Transaction Log**: Live trading activity with timestamps
+- **🔧 MCP Tool Calls**: See AI decision-making process in real-time
+- **⚡ Performance Metrics**: System health and execution timing
+
+### 🎮 **Interactive Features**
+
+- **🔴 Live Status**: Real-time indicators showing system activity
+- **📊 Multi-timeframe Updates**: Different refresh rates for different data types
+- **🎨 Color-coded Interface**: Easy-to-read status indicators
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
+
+---
+
+## 🛠️ MCP Servers
+
+The system uses **Model Context Protocol (MCP)** servers for modular functionality:
+
+### 📈 **MCP-Trader** (Custom)
+```python
+# Technical analysis tools
+analyze_stock(symbol, timeframe)     # Full technical analysis
+analyze_crypto(symbol)               # Cryptocurrency analysis  
+relative_strength(symbol, benchmark) # Performance comparison
+volume_profile(symbol)               # Support/resistance levels
+detect_patterns(symbol)              # Chart pattern recognition
+position_size(capital, volatility)   # Risk-based position sizing
+suggest_stops(symbol, entry_price)   # Stop loss recommendations
+```
+
+### 💰 **Accounts Server**
+```python
+# Account management
+get_balance(account_name)            # Current cash balance
+get_holdings(account_name)           # Current positions
+buy_shares(account, symbol, qty)     # Execute buy order
+sell_shares(account, symbol, qty)    # Execute sell order
+list_transactions(account)           # Transaction history
+```
+
+### 📊 **Market Data Server**
+```python
+# Market information
+get_share_price(symbol)              # Current stock price
+get_market_status()                  # Market open/closed status
+get_company_info(symbol)             # Basic company data
+```
+
+### 📱 **Push Notification Server**
+```python
+# Alert system
+send_push_notification(message)     # Mobile alerts
+send_trading_alert(trade_details)   # Trade-specific notifications
+```
+
+---
+
+## 🔗 API Integrations
+
+### 📊 **Financial Data**
+- **[Polygon.io](https://polygon.io/)** - Real-time stock prices, market data
+- **[Tiingo](https://api.tiingo.com/)** - Technical indicators, historical data, crypto
+
+### 🤖 **AI & Language Models**
+- **[OpenAI](https://openai.com/)** - GPT-4 for trading decisions and analysis
+
+### 🔍 **Research & News**
+- **[Brave Search](https://search.brave.com/)** - Market news and company research
+- **[Serper](https://serper.dev/)** - Additional search capabilities
+
+### 📱 **Notifications**
+- **[Pushover](https://pushover.net/)** - Mobile push notifications
+- **[SendGrid](https://sendgrid.com/)** - Email alerts and reports
+
+---
+
+## 📖 Documentation
+
+### 📚 **Core Documentation**
+- **[System Architecture](docs/architecture.md)** - Detailed technical overview
+- **[API Reference](docs/api.md)** - Complete API documentation
+- **[Trading Strategies](docs/strategies.md)** - Agent personality deep-dive
+- **[MCP Development](docs/mcp.md)** - Creating custom MCP servers
+
+### 🔧 **Development Guides**
+- **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute
+- **[Development Setup](docs/development.md)** - Local development environment
+- **[Testing Guide](docs/testing.md)** - Running tests and validation
+- **[Deployment Guide](docs/deployment.md)** - Production deployment
+
+### 🆘 **Support & Troubleshooting**
+- **[FAQ](docs/faq.md)** - Frequently asked questions
+- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
+- **[Discord Community](https://discord.gg/your-server)** - Live community support
+- **[GitHub Issues](https://github.com/your-username/Trading-Agent-with-MCPs/issues)** - Bug reports and feature requests
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+### 🚀 **Quick Contribution**
+
+```bash
+# 1. Fork the repository
+git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+
+# 2. Create a feature branch
+git checkout -b feature/amazing-new-feature
+
+# 3. Make your changes
+# ... code, test, document ...
+
+# 4. Submit a pull request
+git push origin feature/amazing-new-feature
+```
+
+### 📋 **Contribution Areas**
+
+- **🤖 AI Agent Personalities** - Add new trading strategies
+- **📊 Technical Indicators** - Extend MCP-Trader capabilities  
+- **🔌 API Integrations** - Connect new data providers
+- **🎨 UI Improvements** - Enhance the dashboard experience
+- **📖 Documentation** - Improve guides and tutorials
+- **🧪 Testing** - Add test coverage and validation
+
+### 📜 **Guidelines**
+
+- Follow the [Contributing Guidelines](CONTRIBUTING.md)
+- Ensure all tests pass: `uv run pytest`
+- Update documentation for new features
+- Follow the existing code style and patterns
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+### 🎯 **Commercial Use**
+- ✅ Commercial use allowed
+- ✅ Modification allowed  
+- ✅ Distribution allowed
+- ✅ Private use allowed
+
+### ⚠️ **Disclaimer**
+This software is for educational and research purposes. **Trading involves risk**. Past performance does not guarantee future results. Always do your own research and consider consulting with a financial advisor.
+
+---
+
+## 🌟 Show Your Support
+
+If this project helped you, please give it a ⭐ on GitHub!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=your-username/Trading-Agent-with-MCPs&type=Date)](https://star-history.com/#your-username/Trading-Agent-with-MCPs&Date)
+
+---
+
+<div align="center">
+
+**Built with ❤️ by the Trading Agent Community**
+
+[🐦 Twitter](https://twitter.com/your-handle) • [💬 Discord](https://discord.gg/your-server) • [📧 Email](mailto:support@your-domain.com)
+
+</div>
