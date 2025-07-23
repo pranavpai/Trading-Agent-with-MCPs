@@ -21,6 +21,7 @@ dependencies = [
     "langsmith>=0.3.18",
     "lxml>=5.3.1",
     "mcp-server-fetch>=2025.1.17",
+    "mcp-trader",
     "mcp[cli]>=1.5.0",
     "openai>=1.68.2",
     "openai-agents>=0.0.15",
@@ -44,4 +45,7 @@ dependencies = [
 dev = [
     "ipykernel>=6.29.5",
 ]
+
+[tool.uv.sources]
+mcp-trader = { path = "mcp-trader/dist/mcp_trader-0.3.0-py3-none-any.whl" }
 

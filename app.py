@@ -4,7 +4,7 @@ import pandas as pd
 from trading_floor import names, lastnames, short_model_names
 import plotly.express as px
 from accounts import Account
-from database import read_log
+from database import read_log, read_log_prioritized, read_mcp_tool_logs
 
 mapper = {
     "trace": Color.WHITE,
@@ -13,6 +13,7 @@ mapper = {
     "generation": Color.YELLOW,
     "response": Color.MAGENTA,
     "account": Color.RED,
+    "mcp_tool": Color.BLUE,
 }
 
 
@@ -81,13 +82,35 @@ class Trader:
         return f"<div style='text-align: center;background-color:{color};'><span style='font-size:32px'>${portfolio_value:,.0f}</span><span style='font-size:24px'>&nbsp;&nbsp;&nbsp;{emoji}&nbsp;${pnl:,.0f}</span></div>"
 
     def get_logs(self, previous=None) -> str:
-        logs = read_log(self.name, last_n=13)
+        logs = read_log_prioritized(self.name, last_n=13)
         response = ""
         for log in logs:
             timestamp, type, message = log
             color = mapper.get(type, Color.WHITE).value
-            response += f"<span style='color:{color}'>{timestamp} : [{type}] {message}</span><br/>"
-        response = f"<div style='height:250px; overflow-y:auto;'>{response}</div>"
+            # Format account logs specially for trading activity
+            if type == "account":
+                response += f"<span style='color:{color}; font-weight:bold'>{timestamp.split()[1]} : 💰 {message}</span><br/>"
+            else:
+                response += f"<span style='color:{color}'>{timestamp.split()[1]} : [{type}] {message}</span><br/>"
+        response = f"<div style='height:250px; overflow-y:auto; background: #1a1a1a; padding: 8px; border-radius: 4px;'>{response}</div>"
+        if response != previous:
+            return response
+        return gr.update()
+
+    def get_mcp_tool_logs(self, previous=None) -> str:
+        logs = read_mcp_tool_logs(self.name, last_n=10)
+        response = ""
+        for log in logs:
+            timestamp, type, message = log
+            color = mapper.get(type, Color.BLUE).value
+            # Clean up the message format - remove redundant timestamp formatting
+            clean_message = message.replace("🔧 ", "")
+            response += f"<span style='color:{color}; font-weight:bold'>{timestamp.split()[1]} : 🔧 {clean_message}</span><br/>"
+        
+        if not response:
+            response = "<span style='color:#666; font-style:italic'>No MCP tool calls yet...</span><br/>"
+            
+        response = f"<div style='height:250px; overflow-y:auto; background: #1a1a1a; padding: 8px; border-radius: 4px;'>{response}</div>"
         if response != previous:
             return response
         return gr.update()
@@ -100,6 +123,8 @@ class TraderView:
         self.chart = None
         self.holdings_table = None
         self.transactions_table = None
+        self.activity_log = None
+        self.tool_log = None
 
     def make_ui(self):
         with gr.Column():
@@ -111,7 +136,12 @@ class TraderView:
                     self.trader.get_portfolio_value_chart, container=True, show_label=False
                 )
             with gr.Row(variant="panel"):
-                self.log = gr.HTML(self.trader.get_logs)
+                with gr.Column(scale=1):
+                    gr.HTML("<h4 style='color: #00dddd; margin: 5px 0;'>📊 Trading Activity</h4>")
+                    self.activity_log = gr.HTML(self.trader.get_logs)
+                with gr.Column(scale=1):
+                    gr.HTML("<h4 style='color: #0066ff; margin: 5px 0;'>🔧 MCP Tool Calls</h4>")
+                    self.tool_log = gr.HTML(self.trader.get_mcp_tool_logs)
             with gr.Row():
                 self.holdings_table = gr.Dataframe(
                     value=self.trader.get_holdings_df,
@@ -140,17 +170,11 @@ class TraderView:
             outputs=[
                 self.portfolio_value,
                 self.chart,
+                self.activity_log,
+                self.tool_log,
                 self.holdings_table,
                 self.transactions_table,
             ],
-            show_progress="hidden",
-            queue=False,
-        )
-        log_timer = gr.Timer(value=0.5)
-        log_timer.tick(
-            fn=self.trader.get_logs,
-            inputs=[self.log],
-            outputs=[self.log],
             show_progress="hidden",
             queue=False,
         )
@@ -160,6 +184,8 @@ class TraderView:
         return (
             self.trader.get_portfolio_value(),
             self.trader.get_portfolio_value_chart(),
+            self.trader.get_logs(),
+            self.trader.get_mcp_tool_logs(),
             self.trader.get_holdings_df(),
             self.trader.get_transactions_df(),
         )

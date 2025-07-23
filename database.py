@@ -82,6 +82,71 @@ def read_log(name: str, last_n=10):
         
         return reversed(cursor.fetchall())
 
+def read_log_prioritized(name: str, last_n=10):
+    """
+    Read log entries prioritizing account logs (trading transactions) over trace logs.
+    
+    Args:
+        name (str): The name to retrieve logs for
+        last_n (int): Number of most recent entries to retrieve
+        
+    Returns:
+        list: A list of tuples containing (datetime, type, message)
+    """
+    with sqlite3.connect(DB) as conn:
+        cursor = conn.cursor()
+        
+        # First get recent account logs (trading transactions)
+        cursor.execute('''
+            SELECT datetime, type, message FROM logs 
+            WHERE name = ? AND type = 'account'
+            ORDER BY datetime DESC
+            LIMIT ?
+        ''', (name.lower(), last_n))
+        
+        account_logs = cursor.fetchall()
+        remaining_slots = last_n - len(account_logs)
+        
+        if remaining_slots > 0:
+            # Fill remaining slots with other log types
+            cursor.execute('''
+                SELECT datetime, type, message FROM logs 
+                WHERE name = ? AND type != 'account'
+                ORDER BY datetime DESC
+                LIMIT ?
+            ''', (name.lower(), remaining_slots))
+            
+            other_logs = cursor.fetchall()
+            all_logs = account_logs + other_logs
+        else:
+            all_logs = account_logs
+        
+        # Sort by datetime descending and return reversed for chronological order
+        all_logs.sort(key=lambda x: x[0], reverse=True)
+        return reversed(all_logs)
+
+def read_mcp_tool_logs(name: str, last_n=10):
+    """
+    Read the most recent MCP tool call logs for a given name.
+    
+    Args:
+        name (str): The name to retrieve logs for
+        last_n (int): Number of most recent entries to retrieve
+        
+    Returns:
+        list: A list of tuples containing (datetime, type, message)
+    """
+    with sqlite3.connect(DB) as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT datetime, type, message FROM logs 
+            WHERE name = ? AND type = 'mcp_tool'
+            ORDER BY datetime DESC
+            LIMIT ?
+        ''', (name.lower(), last_n))
+        
+        return reversed(cursor.fetchall())
+
 def write_market(date: str, data: dict) -> None:
     data_json = json.dumps(data)
     with sqlite3.connect(DB) as conn:

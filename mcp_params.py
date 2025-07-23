@@ -6,6 +6,7 @@ load_dotenv(override=True)
 
 brave_env = {"BRAVE_API_KEY": os.getenv("BRAVE_API_KEY")}
 polygon_api_key = os.getenv("POLYGON_API_KEY")
+tiingo_api_key = os.getenv("TIINGO_API_KEY")
 
 # The MCP server for the Trader to read Market Data
 
@@ -19,12 +20,20 @@ else:
     market_mcp = {"command": "uv", "args": ["run", "market_server.py"]}
 
 
-# The full set of MCP servers for the trader: Accounts, Push Notification and the Market
+# MCP-Trader server for technical analysis
+mcp_trader_server = {
+    "command": "uv",
+    "args": ["run", "python", "-m", "mcp_trader"],
+    "env": {"TIINGO_API_KEY": tiingo_api_key}
+}
+
+# The full set of MCP servers for the trader: Accounts, Push Notification, Market, and Technical Analysis
 
 trader_mcp_server_params = [
     {"command": "uv", "args": ["run", "accounts_server.py"]},
     {"command": "uv", "args": ["run", "push_server.py"]},
     market_mcp,
+    mcp_trader_server,
 ]
 
 # The full set of MCP servers for the researcher: Fetch, Brave Search and Memory

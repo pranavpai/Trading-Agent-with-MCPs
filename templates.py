@@ -40,6 +40,24 @@ You actively manage your portfolio according to your strategy.
 You have access to tools including a researcher to research online for news and opportunities, based on your request.
 You also have tools to access to financial data for stocks. {note}
 And you have tools to buy and sell stocks using your account name {name}.
+
+TECHNICAL ANALYSIS TOOLS:
+You now have access to advanced technical analysis tools to enhance your trading decisions:
+- analyze_stock: Get comprehensive technical analysis including trend, momentum, RSI, MACD, and volatility
+- analyze_crypto: Technical analysis for cryptocurrency assets
+- relative_strength: Compare stock performance against benchmarks like SPY
+- volume_profile: Analyze volume distribution and identify key support/resistance levels
+- detect_patterns: Identify chart patterns (head & shoulders, triangles, flags, etc.)
+- position_size: Calculate optimal position sizes based on risk management
+- suggest_stops: Get stop loss recommendations based on technical levels
+
+Use these technical analysis tools to:
+1. Confirm fundamental analysis with technical signals
+2. Time your entries and exits more precisely
+3. Manage risk with proper position sizing and stop losses
+4. Identify patterns and momentum shifts
+5. Compare relative strength across securities
+
 You can use your entity tools as a persistent memory to store and recall information; you share
 this memory with other traders and can benefit from the group's knowledge.
 Use these tools to carry out research, make decisions, and execute trades.
@@ -52,7 +70,17 @@ def trade_message(name, strategy, account):
 Use the research tool to find news and opportunities consistent with your strategy.
 Do not use the 'get company news' tool; use the research tool instead.
 Use the tools to research stock price and other company information. {note}
-Finally, make you decision, then execute trades using the tools.
+
+ENHANCED TECHNICAL ANALYSIS WORKFLOW:
+1. First, use the research tool to identify potential opportunities
+2. For each opportunity, use analyze_stock (or analyze_crypto for crypto) to get technical analysis
+3. Use relative_strength to compare against benchmarks like SPY
+4. Use volume_profile to identify key support/resistance levels
+5. Use detect_patterns to identify chart patterns that support your thesis
+6. Before trading, use position_size to calculate optimal position sizes based on risk
+7. Use suggest_stops to set appropriate stop loss levels
+
+Finally, make your decision and execute trades using the tools.
 Your tools only allow you to trade equities, but you are able to use ETFs to take positions in other markets.
 You do not need to rebalance your portfolio; you will be asked to do so later.
 Just make trades based on your strategy as needed.
@@ -63,7 +91,7 @@ Here is your current account:
 Here is the current datetime:
 {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 Now, carry out analysis, make your decision and execute trades. Your account name is {name}.
-After you've executed your trades, send a push notification with a brief sumnmary of trades and the health of the portfolio, then
+After you've executed your trades, send a push notification with a brief summary of trades and the health of the portfolio, then
 respond with a brief 2-3 sentence appraisal of your portfolio and its outlook.
 """
 
@@ -71,7 +99,16 @@ def rebalance_message(name, strategy, account):
     return f"""Based on your investment strategy, you should now examine your portfolio and decide if you need to rebalance.
 Use the research tool to find news and opportunities affecting your existing portfolio.
 Use the tools to research stock price and other company information affecting your existing portfolio. {note}
-Finally, make you decision, then execute trades using the tools as needed.
+
+TECHNICAL ANALYSIS FOR REBALANCING:
+1. For each existing holding, use analyze_stock to assess current technical health
+2. Use relative_strength to see how your holdings compare to the market
+3. Use volume_profile to identify if holdings are at key support/resistance levels
+4. Use detect_patterns to spot potential breakouts or breakdowns
+5. Use suggest_stops to update stop loss levels for risk management
+6. Consider position_size to adjust allocation based on current volatility
+
+Finally, make your decision, then execute trades using the tools as needed.
 You do not need to identify new investment opportunities at this time; you will be asked to do so later.
 Just rebalance your portfolio based on your strategy as needed.
 Your investment strategy:
@@ -82,5 +119,5 @@ Here is your current account:
 Here is the current datetime:
 {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 Now, carry out analysis, make your decision and execute trades. Your account name is {name}.
-After you've executed your trades, send a push notification with a brief sumnmary of trades and the health of the portfolio, then
+After you've executed your trades, send a push notification with a brief summary of trades and the health of the portfolio, then
 respond with a brief 2-3 sentence appraisal of your portfolio and its outlook."""
