@@ -69,23 +69,26 @@
 Get up and running in under 5 minutes:
 
 ```bash
-# 1. Clone the repository
+# 1. Clone the main repository
 git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
 cd Trading-Agent-with-MCPs
 
-# 2. Install UV (if not already installed)
+# 2. Clone the MCP-Trader server (required dependency)
+git clone https://github.com/wshobson/mcp-trader.git
+
+# 3. Install UV (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 3. Set up environment
+# 4. Set up environment
 cp .env.example .env
 # Edit .env with your API keys (see Configuration section)
 
-# 4. Install dependencies and run
+# 5. Install dependencies and run
 uv sync
 uv run python app.py        # Start the dashboard
 uv run python trading_floor.py  # Start trading (in another terminal)
 
-# 5. Open your browser
+# 6. Open your browser
 open http://127.0.0.1:7860
 ```
 
@@ -213,11 +216,17 @@ Each agent has a unique personality and trading approach:
 
 ### 🛠️ **Step-by-Step Installation**
 
-#### 1️⃣ **Clone Repository**
+#### 1️⃣ **Clone Repositories**
 ```bash
+# Clone the main trading agent repository
 git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
 cd Trading-Agent-with-MCPs
+
+# Clone the MCP-Trader server (required for technical analysis)
+git clone https://github.com/wshobson/mcp-trader.git
 ```
+
+> 📝 **Note**: The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides essential technical analysis tools for our AI agents.
 
 #### 2️⃣ **Install UV (if needed)**
 ```bash
@@ -249,7 +258,17 @@ uv sync
 uv run python -c "print('✅ Installation successful!')"
 ```
 
-#### 5️⃣ **Initialize Database**
+#### 5️⃣ **Set Up MCP-Trader**
+```bash
+# Navigate to MCP-Trader directory and set up
+cd mcp-trader
+cp .env.example .env
+# Add your Tiingo API key to mcp-trader/.env
+uv sync
+cd ..  # Return to main directory
+```
+
+#### 6️⃣ **Initialize Database**
 ```bash
 # Reset/initialize trading accounts
 uv run python reset.py
@@ -265,11 +284,12 @@ Get your free API keys from these providers:
 
 | Service | Purpose | Link | Required |
 |---------|---------|------|----------|
-| 🤖 **OpenAI** | AI trading agents | [Get API Key](https://platform.openai.com/api-keys) | ✅ **Yes** |
+| 🤖 **OpenAI** | AI trading agents | [Get API Key](https://platform.openai.com/account/api-keys) | ✅ **Yes** |
 | 📊 **Polygon.io** | Real-time market data | [Get API Key](https://polygon.io/dashboard/api-keys) | ✅ **Yes** |
-| 💹 **Tiingo** | Technical analysis data | [Get API Key](https://api.tiingo.com/account/token) | ✅ **Yes** |
-| 🔍 **Brave Search** | Market research | [Get API Key](https://api.search.brave.com/app/keys) | ✅ **Yes** |
-| 📱 **Pushover** | Mobile notifications | [Get Credentials](https://pushover.net/apps/build) | ⚪ Optional |
+| 💹 **Tiingo** | Technical analysis data | [Get API Key](https://api.tiingo.com/) | ✅ **Yes** |
+| 📈 **MCP-Trader** | Technical analysis server | [Setup Guide](https://github.com/wshobson/mcp-trader#setup) | ✅ **Yes** |
+| 🔍 **Brave Search** | Market research | [Get API Key](https://api.search.brave.com/) | ✅ **Yes** |
+| 📱 **Pushover** | Mobile notifications | [Get Credentials](https://pushover.net/) | ⚪ Optional |
 
 ### ⚙️ **Trading Configuration**
 
@@ -328,6 +348,9 @@ uv run python trading_floor.py
 # Production settings (trades every hour during market hours)
 echo "RUN_EVERY_N_MINUTES=60" > .env
 echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=false" >> .env
+
+# Verify MCP-Trader is properly set up
+cd mcp-trader && uv run python -m mcp_trader.server --help
 ```
 
 ---
@@ -356,9 +379,12 @@ echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=false" >> .env
 
 The system uses **Model Context Protocol (MCP)** servers for modular functionality:
 
-### 📈 **MCP-Trader** (Custom)
+### 📈 **MCP-Trader** (by [@wshobson](https://github.com/wshobson))
+
+> 🙏 **Credit**: This project uses the excellent [MCP-Trader server](https://github.com/wshobson/mcp-trader) created by [@wshobson](https://github.com/wshobson) for technical analysis capabilities.
+
 ```python
-# Technical analysis tools
+# Technical analysis tools (provided by MCP-Trader)
 analyze_stock(symbol, timeframe)     # Full technical analysis
 analyze_crypto(symbol)               # Cryptocurrency analysis  
 relative_strength(symbol, benchmark) # Performance comparison
@@ -367,6 +393,13 @@ detect_patterns(symbol)              # Chart pattern recognition
 position_size(capital, volatility)   # Risk-based position sizing
 suggest_stops(symbol, entry_price)   # Stop loss recommendations
 ```
+
+**Features provided by MCP-Trader:**
+- 📊 **Technical Indicators**: RSI, MACD, Bollinger Bands, Moving Averages
+- 📈 **Pattern Recognition**: Support/resistance, trend analysis
+- 💰 **Risk Management**: Position sizing, stop loss suggestions
+- 🔄 **Multiple Data Sources**: Tiingo, Binance APIs with fallback support
+- ⚡ **FastMCP Resources**: Direct market data access via `stock://` and `crypto://` URIs
 
 ### 💰 **Accounts Server**
 ```python
@@ -420,7 +453,7 @@ send_trading_alert(trade_details)   # Trade-specific notifications
 - **[System Architecture](docs/architecture.md)** - Detailed technical overview
 - **[API Reference](docs/api.md)** - Complete API documentation
 - **[Trading Strategies](docs/strategies.md)** - Agent personality deep-dive
-- **[MCP Development](docs/mcp.md)** - Creating custom MCP servers
+- **[MCP Development](https://modelcontextprotocol.io/docs)** - Official MCP documentation for creating custom servers
 
 ### 🔧 **Development Guides**
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute
@@ -471,6 +504,31 @@ git push origin feature/amazing-new-feature
 - Ensure all tests pass: `uv run pytest`
 - Update documentation for new features
 - Follow the existing code style and patterns
+
+---
+
+## 🙏 Acknowledgments
+
+This project builds upon the excellent work of the open-source community:
+
+### 🏆 **Key Contributors**
+
+- **[@wshobson](https://github.com/wshobson)** - Creator of [MCP-Trader](https://github.com/wshobson/mcp-trader), the powerful technical analysis MCP server that provides the core market analysis capabilities for our AI agents.
+
+### 🛠️ **Technologies & Frameworks**
+
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)** - By Anthropic, enabling modular AI tool integration
+- **[Gradio](https://gradio.app/)** - For the beautiful real-time web interface
+- **[UV](https://docs.astral.sh/uv/)** - By Astral, for fast Python package management
+- **[OpenAI](https://openai.com/)** - For GPT-4 powering our AI trading agents
+
+### 🔗 **Data Providers**
+
+- **[Polygon.io](https://polygon.io/)** - Real-time market data
+- **[Tiingo](https://api.tiingo.com/)** - Technical analysis and historical data
+- **[Brave Search](https://search.brave.com/)** - Market research and news
+
+> 💡 **Want to contribute?** Check out our [Contributing Guidelines](CONTRIBUTING.md) to join the community!
 
 ---
 
