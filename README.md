@@ -5,13 +5,15 @@
 [![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gradio](https://img.shields.io/badge/Gradio-5.22+-orange.svg)](https://gradio.app/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green.svg)](https://openai.com/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-green.svg)](https://openai.com/)
 [![UV](https://img.shields.io/badge/uv-package%20manager-purple.svg)](https://docs.astral.sh/uv/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-red.svg)](https://modelcontextprotocol.io/)
 
 **🔴 LIVE AI Trading Agents with Real-Time Streaming Dashboard**
 
 *Four unique AI personalities trading autonomously with professional-grade tools*
+
+> ⚠️ **Repository Setup Required**: This README contains placeholder URLs (`your-username`, `your-domain`, etc.) that need to be updated with actual repository information before publishing.
 
 [🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [📖 Documentation](#-documentation) • [🤝 Contributing](#-contributing)
 
@@ -81,14 +83,23 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 4. Set up environment
 cp .env.example .env
-# Edit .env with your API keys (see Configuration section)
+# Edit .env with your API keys (see Configuration section below)
 
-# 5. Install dependencies and run
+# 5. Install dependencies
 uv sync
-uv run python app.py        # Start the dashboard
-uv run python trading_floor.py  # Start trading (in another terminal)
 
-# 6. Open your browser
+# 6. Set up MCP-Trader and build
+cd mcp-trader && cp .env.example .env && uv sync && uv build && cd ..
+
+# 7. Create required directories and initialize
+mkdir -p memory
+uv run python reset.py
+
+# 8. Launch services
+uv run python app.py &          # Dashboard in background
+uv run python trading_floor.py & # Trading floor in background
+
+# 9. Open your browser
 open http://127.0.0.1:7860
 ```
 
@@ -125,7 +136,7 @@ graph TB
     end
     
     subgraph "🌍 External APIs"
-        OPENAI[🤖 OpenAI<br/>GPT-4 Models]
+        OPENAI[🤖 OpenAI<br/>GPT-4o-mini + Multi-Model Support]
         POLYGON[📈 Polygon.io<br/>Market Data]
         TIINGO[💹 Tiingo<br/>Financial Data]
         BRAVE[🔍 Brave Search<br/>News & Research]
@@ -169,7 +180,7 @@ graph TB
 1. **🎯 Trigger**: Timer triggers trading cycle (configurable frequency)
 2. **🧠 Research**: AI agents research markets via Brave Search + financial APIs
 3. **📊 Analysis**: MCP-Trader provides technical analysis and risk metrics
-4. **💭 Decision**: GPT-4 processes data and makes trading decisions
+4. **💭 Decision**: AI models (GPT-4o-mini by default) process data and make trading decisions
 5. **💰 Execution**: Account MCP executes trades and updates balances
 6. **📱 Notification**: Push notifications sent for significant events
 7. **🖥️ Display**: Real-time UI updates show all activity live
@@ -210,9 +221,12 @@ Each agent has a unique personality and trading approach:
 
 ### 📋 **Prerequisites**
 
-- **Python 3.12+** - [Download Python](https://www.python.org/downloads/)
+- **Python 3.12+** - [Download Python](https://www.python.org/downloads/) *(Main project requirement)*
+- **Python 3.11+** - *Minimum requirement for MCP-Trader subproject*
 - **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
 - **Git** - [Install Git](https://git-scm.com/downloads)
+
+> 📝 **Note**: Python 3.12+ is recommended for full compatibility across all components.
 
 ### 🛠️ **Step-by-Step Installation**
 
@@ -263,12 +277,20 @@ uv run python -c "print('✅ Installation successful!')"
 # Navigate to MCP-Trader directory and set up
 cd mcp-trader
 cp .env.example .env
-# Add your Tiingo API key to mcp-trader/.env
+# Add your Tiingo API key to mcp-trader/.env (same as main .env)
 uv sync
+# Build the MCP-Trader package (CRITICAL STEP!)
+uv build
 cd ..  # Return to main directory
 ```
 
-#### 6️⃣ **Initialize Database**
+#### 6️⃣ **Create Required Directories**
+```bash
+# Create memory directory for trader databases
+mkdir -p memory
+```
+
+#### 7️⃣ **Initialize Database**
 ```bash
 # Reset/initialize trading accounts
 uv run python reset.py
@@ -277,6 +299,12 @@ uv run python reset.py
 ---
 
 ## 🔧 Configuration
+
+> 📝 **Quick Setup**: Copy `.env.example` to `.env` and add your API keys:
+> ```bash
+> cp .env.example .env
+> # Then edit .env with your actual API keys
+> ```
 
 ### 🔑 **Required API Keys**
 
@@ -308,6 +336,22 @@ RUN_EVERY_N_MINUTES=60        # Trade every hour
 RUN_EVEN_WHEN_MARKET_IS_CLOSED=false  # false = only during market hours
 ```
 
+### 🧠 **Advanced AI Configuration**
+
+Enable multiple AI models for different traders (optional):
+
+```bash
+# Multi-Model Support (optional - uses different AI providers for each trader)
+USE_MANY_MODELS=false              # Set to 'true' to enable
+DEEPSEEK_API_KEY=your_key_here     # For DeepSeek V3 models
+GOOGLE_API_KEY=your_key_here       # For Gemini 2.5 Flash models  
+GROK_API_KEY=your_key_here         # For Grok 3 Mini models
+OPENROUTER_API_KEY=your_key_here   # For additional model providers
+
+# When USE_MANY_MODELS=true, each trader uses a different AI provider:
+# Warren -> GPT 4.1 Mini | George -> DeepSeek V3 | Ray -> Gemini 2.5 | Cathie -> Grok 3
+```
+
 ---
 
 ## 🎯 Usage Examples
@@ -315,11 +359,16 @@ RUN_EVEN_WHEN_MARKET_IS_CLOSED=false  # false = only during market hours
 ### 🚀 **Basic Usage**
 
 ```bash
+# Method 1: Two Terminals (Recommended for Development)
 # Terminal 1: Start the real-time dashboard
 uv run python app.py
 
 # Terminal 2: Start the trading engine
 uv run python trading_floor.py
+
+# Method 2: Background Processes (Recommended for Production)
+uv run python app.py &          # Dashboard in background
+uv run python trading_floor.py & # Trading floor in background
 
 # Open browser to http://127.0.0.1:7860
 ```
@@ -350,12 +399,47 @@ echo "RUN_EVERY_N_MINUTES=60" > .env
 echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=false" >> .env
 
 # Verify MCP-Trader is properly set up
-cd mcp-trader && uv run python -m mcp_trader.server --help
+cd mcp-trader && uv run python -m mcp_trader --help
 ```
+
+### 🔧 **Troubleshooting**
+
+#### **"No MCP tool calls yet..." in Dashboard**
+```bash
+# Check if TIINGO_API_KEY is set
+grep TIINGO_API_KEY .env
+
+# Ensure memory directory exists
+ls -la memory/
+
+# Restart services cleanly
+pkill -f "python" && sleep 2
+uv run python app.py &
+uv run python trading_floor.py &
+```
+
+#### **"Connection closed" Errors**
+```bash
+# Ensure MCP-Trader is built
+cd mcp-trader && ls -la dist/
+# If no .whl file, run: uv build
+
+# Check for missing dependencies
+node --version && npm --version
+uvx --version
+```
+
+#### **"Input should be a valid string" Errors**
+- Add missing API key to `.env` file
+- Restart trading floor: `pkill -f trading_floor.py && uv run python trading_floor.py &`
 
 ---
 
 ## 📊 Live Demo
+
+![Trading Dashboard](image/dashboard.png)
+
+*🔴 Live AI Trading Dashboard - Real-time streaming interface with four AI trading agents*
 
 ### 🖥️ **Dashboard Features**
 
@@ -435,7 +519,7 @@ send_trading_alert(trade_details)   # Trade-specific notifications
 - **[Tiingo](https://api.tiingo.com/)** - Technical indicators, historical data, crypto
 
 ### 🤖 **AI & Language Models**
-- **[OpenAI](https://openai.com/)** - GPT-4 for trading decisions and analysis
+- **[OpenAI](https://openai.com/)** - GPT-4o-mini and other AI models for trading decisions and analysis
 
 ### 🔍 **Research & News**
 - **[Brave Search](https://search.brave.com/)** - Market news and company research
@@ -520,7 +604,7 @@ This project builds upon the excellent work of the open-source community:
 - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)** - By Anthropic, enabling modular AI tool integration
 - **[Gradio](https://gradio.app/)** - For the beautiful real-time web interface
 - **[UV](https://docs.astral.sh/uv/)** - By Astral, for fast Python package management
-- **[OpenAI](https://openai.com/)** - For GPT-4 powering our AI trading agents
+- **[OpenAI](https://openai.com/)** - For GPT-4o-mini and other AI models powering our trading agents
 
 ### 🔗 **Data Providers**
 

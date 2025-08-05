@@ -6,7 +6,6 @@
 # 🔒 CRITICAL SECURITY - API KEYS & CREDENTIALS
 # =============================================================================
 .env
-.env.*
 .envrc
 *.env
 env.local
@@ -14,6 +13,7 @@ env.local
 .env.production
 .env.development
 .env.test
+# Note: .env.example is intentionally NOT ignored to provide setup template
 
 # API Keys and Authentication
 **/api_keys.*

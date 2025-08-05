@@ -222,16 +222,24 @@ def create_ui():
 
         # Set up medium refresh (portfolio and holdings) for all traders  
         for trader_view in trader_views:
+            def refresh_portfolio_data(tv=trader_view):
+                tv.trader.reload()  # Reload account data from database
+                return [tv.trader.get_portfolio_value(), tv.trader.get_holdings_df(), tv.trader.get_transactions_df()]
+            
             medium_timer.tick(
-                fn=lambda tv=trader_view: [tv.trader.get_portfolio_value(), tv.trader.get_holdings_df(), tv.trader.get_transactions_df()],
+                fn=refresh_portfolio_data,
                 outputs=[trader_view.portfolio_value, trader_view.holdings_table, trader_view.transactions_table],
                 show_progress="hidden"
             )
 
         # Set up slow refresh (charts) for all traders
         for trader_view in trader_views:
+            def refresh_chart_data(tv=trader_view):
+                tv.trader.reload()  # Reload account data from database
+                return tv.trader.get_portfolio_value_chart()
+            
             slow_timer.tick(
-                fn=lambda tv=trader_view: tv.trader.get_portfolio_value_chart(),
+                fn=refresh_chart_data,
                 outputs=[trader_view.chart],
                 show_progress="hidden"
             )
