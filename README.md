@@ -114,7 +114,7 @@ cp .env.example .env
 uv sync
 
 # 5. Set up MCP-Trader (pull latest version first)
-cd mcp-trader && git pull origin main && cp .env.example .env && uv sync && uv build && cd ..
+cd mcp-trader && git pull origin main && uv sync && uv build && cd ..
 
 # 6. Initialize system
 mkdir -p memory
@@ -154,10 +154,9 @@ pip install uv
 The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides technical analysis capabilities. Understanding the setup process:
 
 - **`git pull origin main`**: Ensures you have the latest MCP-Trader updates and bug fixes
-- **`cp .env.example .env`**: Creates configuration file for API keys
 - **`uv sync`**: Installs MCP-Trader dependencies (pandas, numpy, technical analysis libraries)
 - **`uv build`**: **CRITICAL** - Packages MCP-Trader as a wheel file that the trading system can import
-- **API Key Note**: TIINGO_API_KEY is automatically passed from main `.env` to MCP-Trader - no separate setup needed
+- **Environment Variables**: TIINGO_API_KEY is automatically passed from main `.env` to MCP-Trader
 
 **⚠️ Common Issues:**
 - If `uv build` fails, check that you're in the mcp-trader directory
@@ -408,33 +407,12 @@ ls -la mcp-trader/dist/*.whl
 
 ### 🔧 **Troubleshooting**
 
-#### **"No MCP tool calls yet..." in Dashboard**
-```bash
-# Check if TIINGO_API_KEY is set in main directory .env
-grep TIINGO_API_KEY .env
+For comprehensive troubleshooting, debugging tips, and advanced configuration, see our [MCP Servers Documentation](./mcp-servers-readme.md#-troubleshooting).
 
-# Ensure memory directory exists
-ls -la memory/
-
-# Restart services cleanly
-pkill -f "python" && sleep 2
-uv run python app.py &
-uv run python trading_floor.py &
-```
-
-#### **"Connection closed" Errors**
-```bash
-# Ensure MCP-Trader is built
-cd mcp-trader && ls -la dist/
-# If no .whl file, run: uv build
-
-# Check UV installation
-uvx --version
-```
-
-#### **"Input should be a valid string" Errors**
-- Add missing API key to `.env` file
-- Restart trading floor: `pkill -f trading_floor.py && uv run python trading_floor.py &`
+**Quick fixes:**
+- **"No MCP tool calls"**: Check `TIINGO_API_KEY` in `.env` and ensure `mcp-trader/dist/*.whl` exists
+- **Connection errors**: Run `cd mcp-trader && uv build` if no wheel file found
+- **Missing API keys**: Add all required keys to main directory `.env` file
 
 ---
 

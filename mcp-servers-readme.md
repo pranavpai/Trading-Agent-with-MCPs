@@ -332,10 +332,9 @@ Suggest stop loss levels based on technical analysis.
 
 ```bash
 cd mcp-trader
-cp .env.example .env
-# Add TIINGO_API_KEY to main directory .env (already done if following main README)
-uv sync
-uv build  # CRITICAL: This builds the MCP-Trader package
+git pull origin main  # Get latest updates
+uv sync               # Install dependencies
+uv build             # CRITICAL: This builds the MCP-Trader package
 ```
 
 ---
@@ -350,25 +349,9 @@ uv build  # CRITICAL: This builds the MCP-Trader package
 
 ### ⚡ Quick Setup
 
-```bash
-# 1. Clone and navigate to project
-git clone https://github.com/pranavpai/Trading-Agent-with-MCPs.git
-cd Trading-Agent-with-MCPs
+For complete installation instructions, see the [main README Quick Start section](./README.md#-quick-start-5-minutes).
 
-# 2. Set up environment
-cp .env.example .env
-# Edit .env with your API keys
-
-# 3. Install dependencies
-uv sync
-
-# 4. Set up MCP-Trader (IMPORTANT: includes git pull)
-cd mcp-trader && git pull origin main && cp .env.example .env && uv sync && uv build && cd ..
-
-# 5. Initialize system
-mkdir -p memory
-uv run python reset.py
-```
+The setup process automatically configures all MCP servers when you follow the main installation guide.
 
 ### 🔑 Required Environment Variables
 
