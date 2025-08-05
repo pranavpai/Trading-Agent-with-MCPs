@@ -113,8 +113,8 @@ cp .env.example .env
 # 4. Install dependencies
 uv sync
 
-# 5. Set up MCP-Trader
-cd mcp-trader && cp .env.example .env && uv sync && uv build && cd ..
+# 5. Set up MCP-Trader (pull latest version first)
+cd mcp-trader && git pull origin main && cp .env.example .env && uv sync && uv build && cd ..
 
 # 6. Initialize system
 mkdir -p memory
@@ -125,7 +125,10 @@ uv run python app.py &           # Dashboard
 uv run python trading_floor.py & # Trading engine
 
 # 8. Open dashboard
-open http://127.0.0.1:7860
+# macOS: open http://127.0.0.1:7860
+# Linux: xdg-open http://127.0.0.1:7860  
+# Windows: start http://127.0.0.1:7860
+# Or just navigate to http://127.0.0.1:7860 in your browser
 ```
 
 ### 🛠️ **Detailed Setup Instructions**
@@ -385,16 +388,18 @@ ps aux | grep -E "(app\.py|trading_floor\.py)" | grep -v grep
 
 ```bash
 # Rapid testing (trades every 10 seconds)
-echo "RUN_EVERY_N_MINUTES=0.167" >> .env
-echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=true" >> .env
+# Note: This will modify your .env file
+sed -i.bak 's/RUN_EVERY_N_MINUTES=.*/RUN_EVERY_N_MINUTES=0.167/' .env
+sed -i.bak 's/RUN_EVEN_WHEN_MARKET_IS_CLOSED=.*/RUN_EVEN_WHEN_MARKET_IS_CLOSED=true/' .env
 uv run python trading_floor.py
 
-# Production settings (trades every hour during market hours)
-echo "RUN_EVERY_N_MINUTES=60" > .env
-echo "RUN_EVEN_WHEN_MARKET_IS_CLOSED=false" >> .env
+# Production settings (trades every hour during market hours) 
+# Note: This will modify your .env file
+sed -i.bak 's/RUN_EVERY_N_MINUTES=.*/RUN_EVERY_N_MINUTES=60/' .env
+sed -i.bak 's/RUN_EVEN_WHEN_MARKET_IS_CLOSED=.*/RUN_EVEN_WHEN_MARKET_IS_CLOSED=false/' .env
 
-# Verify MCP-Trader is properly set up
-cd mcp-trader && uv run python -m mcp_trader --help
+# Verify MCP-Trader build was successful
+ls -la mcp-trader/dist/*.whl
 ```
 
 ### 🔧 **Troubleshooting**
@@ -419,8 +424,7 @@ uv run python trading_floor.py &
 cd mcp-trader && ls -la dist/
 # If no .whl file, run: uv build
 
-# Check for missing dependencies
-node --version && npm --version
+# Check UV installation
 uvx --version
 ```
 
@@ -444,7 +448,9 @@ MCP-Trader provides comprehensive technical analysis tools including:
 - 💰 **Risk Management**: Position sizing, stop loss suggestions
 - 🔄 **Multiple Data Sources**: Tiingo, Binance APIs with fallback support
 
-For detailed MCP-Trader documentation and available tools, see the [mcp-trader README](./mcp-trader/README.md).
+For detailed documentation on all MCP servers used in this system, see our [MCP Servers Documentation](./mcp-servers-readme.md).
+
+For the original MCP-Trader documentation, see the [mcp-trader README](./mcp-trader/README.md).
 
 ---
 
@@ -499,7 +505,7 @@ git push origin feature/amazing-new-feature
 ### 📜 **Guidelines**
 
 - Follow the [Contributing Guidelines](CONTRIBUTING.md)
-- Ensure all tests pass: `uv run pytest`
+- Run tests if you modify MCP-Trader: `cd mcp-trader && uv run pytest`
 - Update documentation for new features
 - Follow the existing code style and patterns
 
