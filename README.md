@@ -14,7 +14,7 @@
 *Four unique AI personalities trading autonomously with professional-grade tools*
 
 
-[🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [📖 Documentation](#-documentation) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -32,7 +32,7 @@
 - [📊 Live Demo](#-live-demo)
 - [🛠️ MCP Servers](#️-mcp-servers)
 - [🔗 API Integrations](#-api-integrations)
-- [📖 Documentation](#-documentation)
+
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 
@@ -530,28 +530,6 @@ send_trading_alert(trade_details)   # Trade-specific notifications
 
 ---
 
-## 📖 Documentation
-
-### 📚 **Core Documentation**
-- **[System Architecture](docs/architecture.md)** - Detailed technical overview
-- **[API Reference](docs/api.md)** - Complete API documentation
-- **[Trading Strategies](docs/strategies.md)** - Agent personality deep-dive
-- **[MCP Development](https://modelcontextprotocol.io/docs)** - Official MCP documentation for creating custom servers
-
-### 🔧 **Development Guides**
-- **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute
-- **[Development Setup](docs/development.md)** - Local development environment
-- **[Testing Guide](docs/testing.md)** - Running tests and validation
-- **[Deployment Guide](docs/deployment.md)** - Production deployment
-
-### 🆘 **Support & Troubleshooting**
-- **[FAQ](docs/faq.md)** - Frequently asked questions
-- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
-- **[Discord Community](https://discord.gg/your-server)** - Live community support
-- **[GitHub Issues](https://github.com/your-username/Trading-Agent-with-MCPs/issues)** - Bug reports and feature requests
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Here's how to get started:
@@ -578,7 +556,7 @@ git push origin feature/amazing-new-feature
 - **📊 Technical Indicators** - Extend MCP-Trader capabilities  
 - **🔌 API Integrations** - Connect new data providers
 - **🎨 UI Improvements** - Enhance the dashboard experience
-- **📖 Documentation** - Improve guides and tutorials
+
 - **🧪 Testing** - Add test coverage and validation
 
 ### 📜 **Guidelines**
