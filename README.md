@@ -13,7 +13,6 @@
 
 *Four unique AI personalities trading autonomously with professional-grade tools*
 
-> ⚠️ **Repository Setup Required**: This README contains placeholder URLs (`your-username`, `your-domain`, etc.) that need to be updated with actual repository information before publishing.
 
 [🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [📖 Documentation](#-documentation) • [🤝 Contributing](#-contributing)
 
@@ -437,7 +436,7 @@ uvx --version
 
 ## 📊 Live Demo
 
-![Trading Dashboard](image/dashboard.png)
+![Trading Dashboard](image/Dashboard.png)
 
 *🔴 Live AI Trading Dashboard - Real-time streaming interface with four AI trading agents*
 
@@ -635,7 +634,7 @@ This software is for educational and research purposes. **Trading involves risk*
 
 If this project helped you, please give it a ⭐ on GitHub!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/Trading-Agent-with-MCPs&type=Date)](https://star-history.com/#your-username/Trading-Agent-with-MCPs&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=pranavpai/Trading-Agent-with-MCPs&type=Date)](https://star-history.com/#pranavpai/Trading-Agent-with-MCPs&Date)
 
 ---
 
@@ -643,6 +642,6 @@ If this project helped you, please give it a ⭐ on GitHub!
 
 **Built with ❤️ by the Trading Agent Community**
 
-[🐦 Twitter](https://twitter.com/your-handle) • [💬 Discord](https://discord.gg/your-server) • [📧 Email](mailto:support@your-domain.com)
+[🐦 Twitter](https://x.com/PranavPai01) • [📧 Email](mailto:paipranav01@gmail.com)
 
 </div>
