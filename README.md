@@ -436,7 +436,7 @@ uvx --version
 
 ## 📊 Live Demo
 
-![Trading Dashboard](image/Dashboard.png)
+![Trading Dashboard](./image/dashboard.png)
 
 *🔴 Live AI Trading Dashboard - Real-time streaming interface with four AI trading agents*
 
