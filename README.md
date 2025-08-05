@@ -23,16 +23,15 @@
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
+- [📊 Live Demo](#-live-demo)
 - [🚀 Quick Start](#-quick-start)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🤖 AI Trading Agents](#-ai-trading-agents)
 - [⚙️ Installation Guide](#️-installation-guide)
 - [🔧 Configuration](#-configuration)
 - [🎯 Usage Examples](#-usage-examples)
-- [📊 Live Demo](#-live-demo)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🤖 AI Trading Agents](#-ai-trading-agents)
 - [🛠️ MCP Servers](#️-mcp-servers)
 - [🔗 API Integrations](#-api-integrations)
-
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 
@@ -62,6 +61,30 @@
 - **Database Persistence**: SQLite with real-time logging
 - **Error Handling**: Robust fallback mechanisms
 - **Real-time Monitoring**: System health and performance metrics
+
+---
+
+## 📊 Live Demo
+
+![Trading Dashboard](./image/dashboard.png)
+
+*🔴 Live AI Trading Dashboard - Real-time streaming interface with four AI trading agents*
+
+### 🖥️ **Dashboard Features**
+
+- **📈 Real-time Portfolio Charts**: Live P&L tracking with interactive plots
+- **💰 Account Balances**: Current cash + position values with color-coded P&L
+- **📋 Holdings Table**: Real-time position updates with quantities
+- **📜 Transaction Log**: Live trading activity with timestamps
+- **🔧 MCP Tool Calls**: See AI decision-making process in real-time
+- **⚡ Performance Metrics**: System health and execution timing
+
+### 🎮 **Interactive Features**
+
+- **🔴 Live Status**: Real-time indicators showing system activity
+- **📊 Multi-timeframe Updates**: Different refresh rates for different data types
+- **🎨 Color-coded Interface**: Easy-to-read status indicators
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
 
 ---
 
@@ -103,6 +126,87 @@ open http://127.0.0.1:7860
 ```
 
 > 🎯 **First Time?** Check out our [Detailed Installation Guide](#️-installation-guide) below!
+
+---
+
+## ⚙️ Installation Guide
+
+### 📋 **Prerequisites**
+
+- **Python 3.12+** - [Download Python](https://www.python.org/downloads/) *(Main project requirement)*
+- **Python 3.11+** - *Minimum requirement for MCP-Trader subproject*
+- **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **Git** - [Install Git](https://git-scm.com/downloads)
+
+> 📝 **Note**: Python 3.12+ is recommended for full compatibility across all components.
+
+### 🛠️ **Step-by-Step Installation**
+
+#### 1️⃣ **Clone Repositories**
+```bash
+# Clone the main trading agent repository
+git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+cd Trading-Agent-with-MCPs
+
+# Clone the MCP-Trader server (required for technical analysis)
+git clone https://github.com/wshobson/mcp-trader.git
+```
+
+> 📝 **Note**: The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides essential technical analysis tools for our AI agents.
+
+#### 2️⃣ **Install UV (if needed)**
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
+
+#### 3️⃣ **Set Up Environment**
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit with your API keys
+nano .env  # or use your preferred editor
+```
+
+#### 4️⃣ **Install Dependencies**
+```bash
+# Sync all dependencies (fast!)
+uv sync
+
+# Verify installation
+uv run python -c "print('✅ Installation successful!')"
+```
+
+#### 5️⃣ **Set Up MCP-Trader**
+```bash
+# Navigate to MCP-Trader directory and set up
+cd mcp-trader
+cp .env.example .env
+# Add your Tiingo API key to mcp-trader/.env (same as main .env)
+uv sync
+# Build the MCP-Trader package (CRITICAL STEP!)
+uv build
+cd ..  # Return to main directory
+```
+
+#### 6️⃣ **Create Required Directories**
+```bash
+# Create memory directory for trader databases
+mkdir -p memory
+```
+
+#### 7️⃣ **Initialize Database**
+```bash
+# Reset/initialize trading accounts
+uv run python reset.py
+```
 
 ---
 
@@ -213,87 +317,6 @@ Each agent has a unique personality and trading approach:
 - **Strategy**: Growth stocks, crypto, breakthrough technologies
 - **Tools**: Momentum analysis + innovation thesis research
 - **Risk**: High volatility tolerance, innovation-focused stops
-
----
-
-## ⚙️ Installation Guide
-
-### 📋 **Prerequisites**
-
-- **Python 3.12+** - [Download Python](https://www.python.org/downloads/) *(Main project requirement)*
-- **Python 3.11+** - *Minimum requirement for MCP-Trader subproject*
-- **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
-- **Git** - [Install Git](https://git-scm.com/downloads)
-
-> 📝 **Note**: Python 3.12+ is recommended for full compatibility across all components.
-
-### 🛠️ **Step-by-Step Installation**
-
-#### 1️⃣ **Clone Repositories**
-```bash
-# Clone the main trading agent repository
-git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
-cd Trading-Agent-with-MCPs
-
-# Clone the MCP-Trader server (required for technical analysis)
-git clone https://github.com/wshobson/mcp-trader.git
-```
-
-> 📝 **Note**: The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides essential technical analysis tools for our AI agents.
-
-#### 2️⃣ **Install UV (if needed)**
-```bash
-# macOS/Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Windows
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-
-# Or via pip
-pip install uv
-```
-
-#### 3️⃣ **Set Up Environment**
-```bash
-# Copy environment template
-cp .env.example .env
-
-# Edit with your API keys
-nano .env  # or use your preferred editor
-```
-
-#### 4️⃣ **Install Dependencies**
-```bash
-# Sync all dependencies (fast!)
-uv sync
-
-# Verify installation
-uv run python -c "print('✅ Installation successful!')"
-```
-
-#### 5️⃣ **Set Up MCP-Trader**
-```bash
-# Navigate to MCP-Trader directory and set up
-cd mcp-trader
-cp .env.example .env
-# Add your Tiingo API key to mcp-trader/.env (same as main .env)
-uv sync
-# Build the MCP-Trader package (CRITICAL STEP!)
-uv build
-cd ..  # Return to main directory
-```
-
-#### 6️⃣ **Create Required Directories**
-```bash
-# Create memory directory for trader databases
-mkdir -p memory
-```
-
-#### 7️⃣ **Initialize Database**
-```bash
-# Reset/initialize trading accounts
-uv run python reset.py
-```
 
 ---
 
@@ -431,30 +454,6 @@ uvx --version
 #### **"Input should be a valid string" Errors**
 - Add missing API key to `.env` file
 - Restart trading floor: `pkill -f trading_floor.py && uv run python trading_floor.py &`
-
----
-
-## 📊 Live Demo
-
-![Trading Dashboard](./image/dashboard.png)
-
-*🔴 Live AI Trading Dashboard - Real-time streaming interface with four AI trading agents*
-
-### 🖥️ **Dashboard Features**
-
-- **📈 Real-time Portfolio Charts**: Live P&L tracking with interactive plots
-- **💰 Account Balances**: Current cash + position values with color-coded P&L
-- **📋 Holdings Table**: Real-time position updates with quantities
-- **📜 Transaction Log**: Live trading activity with timestamps
-- **🔧 MCP Tool Calls**: See AI decision-making process in real-time
-- **⚡ Performance Metrics**: System health and execution timing
-
-### 🎮 **Interactive Features**
-
-- **🔴 Live Status**: Real-time indicators showing system activity
-- **📊 Multi-timeframe Updates**: Different refresh rates for different data types
-- **🎨 Color-coded Interface**: Easy-to-read status indicators
-- **📱 Responsive Design**: Works on desktop, tablet, and mobile
 
 ---
 
