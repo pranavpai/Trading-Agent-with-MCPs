@@ -495,7 +495,7 @@ sqlite3 accounts.db "SELECT COUNT(*) FROM logs;"
 
 ## 📚 Additional Resources
 
-- **Original MCP-Trader Documentation**: [mcp-trader/README.md](./mcp-trader/README.md)
+- **Original MCP-Trader Documentation**: [mcp-trader README](https://github.com/wshobson/mcp-trader/blob/main/README.md)
 - **Model Context Protocol**: [Official MCP Documentation](https://modelcontextprotocol.io/)
 - **Trading System Architecture**: See [System Architecture](./README.md#️-system-architecture) in main README
 - **API Documentation**: Individual API provider documentation linked in main README

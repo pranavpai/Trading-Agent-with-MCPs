@@ -115,6 +115,7 @@ uv sync
 
 # 5. Set up MCP-Trader (pull latest version first)
 cd mcp-trader && git pull origin main && cp .env.example .env && uv sync && uv build && cd ..
+# Add TIINGO_API_KEY to mcp-trader/.env after this step
 
 # 6. Initialize system
 mkdir -p memory
@@ -149,18 +150,20 @@ pip install uv
 </details>
 
 <details>
-<summary><b>🔧 MCP-Trader Setup</b></summary>
+<summary><b>🔧 MCP-Trader Setup Details</b></summary>
 
-The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) is included in this repository. Setup steps:
+The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides technical analysis capabilities. Understanding the setup process:
 
-```bash
-cd mcp-trader
-cp .env.example .env
-# Add your Tiingo API key to mcp-trader/.env
-uv sync
-uv build  # CRITICAL: This builds the MCP-Trader package
-cd ..
-```
+- **`git pull origin main`**: Ensures you have the latest MCP-Trader updates and bug fixes
+- **`cp .env.example .env`**: Creates configuration file for API keys
+- **`uv sync`**: Installs MCP-Trader dependencies (pandas, numpy, technical analysis libraries)
+- **`uv build`**: **CRITICAL** - Packages MCP-Trader as a wheel file that the trading system can import
+- **API Key Setup**: Add your `TIINGO_API_KEY` to `mcp-trader/.env` for market data access
+
+**⚠️ Common Issues:**
+- If `uv build` fails, check that you're in the mcp-trader directory
+- Missing API key will cause "No MCP tool calls" in the dashboard
+- The build step creates a `.whl` file in `mcp-trader/dist/` - verify this exists
 </details>
 
 <details>
@@ -450,7 +453,7 @@ MCP-Trader provides comprehensive technical analysis tools including:
 
 For detailed documentation on all MCP servers used in this system, see our [MCP Servers Documentation](./mcp-servers-readme.md).
 
-For the original MCP-Trader documentation, see the [mcp-trader README](./mcp-trader/README.md).
+For the original MCP-Trader documentation, see the [mcp-trader README](https://github.com/wshobson/mcp-trader/blob/main/README.md).
 
 ---
 
