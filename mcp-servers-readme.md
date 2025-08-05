@@ -333,7 +333,7 @@ Suggest stop loss levels based on technical analysis.
 ```bash
 cd mcp-trader
 cp .env.example .env
-# Add TIINGO_API_KEY to .env
+# Add TIINGO_API_KEY to main directory .env (already done if following main README)
 uv sync
 uv build  # CRITICAL: This builds the MCP-Trader package
 ```
@@ -379,7 +379,9 @@ Each MCP server requires specific API keys:
 | **Accounts** | None (uses local SQLite) |
 | **Market** | `POLYGON_API_KEY` |
 | **Push** | `PUSHOVER_USER`, `PUSHOVER_TOKEN` |
-| **MCP-Trader** | `TIINGO_API_KEY` |
+| **MCP-Trader** | `TIINGO_API_KEY` (passed from main .env) |
+
+> 💡 **Important**: All API keys are stored in the **main directory** `.env` file. The trading system automatically passes the appropriate environment variables to each MCP server when launching them. You do NOT need to duplicate API keys in subdirectories.
 
 ### 🚀 Starting MCP Servers
 
@@ -419,7 +421,7 @@ cd mcp-trader && uv run mcp-trader
 **Symptoms**: Dashboard shows no MCP activity
 **Solutions**:
 ```bash
-# Check if TIINGO_API_KEY is set
+# Check if TIINGO_API_KEY is set in main directory
 grep TIINGO_API_KEY .env
 
 # Ensure MCP-Trader is built

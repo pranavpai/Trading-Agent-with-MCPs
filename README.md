@@ -115,7 +115,6 @@ uv sync
 
 # 5. Set up MCP-Trader (pull latest version first)
 cd mcp-trader && git pull origin main && cp .env.example .env && uv sync && uv build && cd ..
-# Add TIINGO_API_KEY to mcp-trader/.env after this step
 
 # 6. Initialize system
 mkdir -p memory
@@ -158,7 +157,7 @@ The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](h
 - **`cp .env.example .env`**: Creates configuration file for API keys
 - **`uv sync`**: Installs MCP-Trader dependencies (pandas, numpy, technical analysis libraries)
 - **`uv build`**: **CRITICAL** - Packages MCP-Trader as a wheel file that the trading system can import
-- **API Key Setup**: Add your `TIINGO_API_KEY` to `mcp-trader/.env` for market data access
+- **API Key Note**: TIINGO_API_KEY is automatically passed from main `.env` to MCP-Trader - no separate setup needed
 
 **⚠️ Common Issues:**
 - If `uv build` fails, check that you're in the mcp-trader directory
@@ -283,8 +282,10 @@ Each agent uses:
 > 📝 **Quick Setup**: Copy `.env.example` to `.env` and add your API keys:
 > ```bash
 > cp .env.example .env
-> # Then edit .env with your actual API keys
+> # Edit .env with your actual API keys - ALL API keys go in this main directory .env file
 > ```
+> 
+> ⚠️ **Important**: All API keys go in the **main directory** `.env` file, not in subdirectories. The system automatically passes keys to MCP servers as needed.
 
 ### 🔑 **Required API Keys**
 
@@ -409,7 +410,7 @@ ls -la mcp-trader/dist/*.whl
 
 #### **"No MCP tool calls yet..." in Dashboard**
 ```bash
-# Check if TIINGO_API_KEY is set
+# Check if TIINGO_API_KEY is set in main directory .env
 grep TIINGO_API_KEY .env
 
 # Ensure memory directory exists
