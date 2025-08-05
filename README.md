@@ -2,7 +2,7 @@
 
 # 🤖 Trading Agent with MCPs
 
-[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gradio](https://img.shields.io/badge/Gradio-5.22+-orange.svg)](https://gradio.app/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-green.svg)](https://openai.com/)
@@ -14,7 +14,7 @@
 *Four unique AI personalities trading autonomously with professional-grade tools*
 
 
-[🚀 Quick Start](#-quick-start) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [🤝 Contributing](#-contributing)
+[🚀 Installation](#-installation--setup) • [📊 Live Demo](#-live-demo) • [🏗️ Architecture](#️-system-architecture) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -24,8 +24,7 @@
 
 - [✨ Features](#-features)
 - [📊 Live Demo](#-live-demo)
-- [🚀 Quick Start](#-quick-start)
-- [⚙️ Installation Guide](#️-installation-guide)
+- [🚀 Installation & Setup](#-installation--setup)
 - [🔧 Configuration](#-configuration)
 - [🎯 Usage Examples](#-usage-examples)
 - [🏗️ System Architecture](#️-system-architecture)
@@ -41,7 +40,7 @@
 
 ### 🤖 **AI-Powered Trading Agents**
 - **4 Unique Personalities**: Warren (Value), George (Contrarian), Ray (Systematic), Cathie (Innovation)
-- **Real-time Decision Making**: Every 10 seconds to 1 hour (configurable)
+- **Real-time Decision Making**: Default every 60 minutes (configurable)
 - **Professional-grade Analysis**: Technical indicators, pattern recognition, risk management
 
 ### 📊 **Live Streaming Dashboard**
@@ -88,73 +87,52 @@
 
 ---
 
-## 🚀 Quick Start
-
-Get up and running in under 5 minutes:
-
-```bash
-# 1. Clone the main repository
-git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
-cd Trading-Agent-with-MCPs
-
-# 2. Clone the MCP-Trader server (required dependency)
-git clone https://github.com/wshobson/mcp-trader.git
-
-# 3. Install UV (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 4. Set up environment
-cp .env.example .env
-# Edit .env with your API keys (see Configuration section below)
-
-# 5. Install dependencies
-uv sync
-
-# 6. Set up MCP-Trader and build
-cd mcp-trader && cp .env.example .env && uv sync && uv build && cd ..
-
-# 7. Create required directories and initialize
-mkdir -p memory
-uv run python reset.py
-
-# 8. Launch services
-uv run python app.py &          # Dashboard in background
-uv run python trading_floor.py & # Trading floor in background
-
-# 9. Open your browser
-open http://127.0.0.1:7860
-```
-
-> 🎯 **First Time?** Check out our [Detailed Installation Guide](#️-installation-guide) below!
-
----
-
-## ⚙️ Installation Guide
+## 🚀 Installation & Setup
 
 ### 📋 **Prerequisites**
 
-- **Python 3.12+** - [Download Python](https://www.python.org/downloads/) *(Main project requirement)*
-- **Python 3.11+** - *Minimum requirement for MCP-Trader subproject*
+- **Python 3.11+** - [Download Python](https://www.python.org/downloads/) *(Minimum requirement)*
+- **Python 3.12+** - *Recommended for best compatibility*
 - **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
 - **Git** - [Install Git](https://git-scm.com/downloads)
 
-> 📝 **Note**: Python 3.12+ is recommended for full compatibility across all components.
+### ⚡ **Quick Start** (5 minutes)
 
-### 🛠️ **Step-by-Step Installation**
-
-#### 1️⃣ **Clone Repositories**
 ```bash
-# Clone the main trading agent repository
-git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+# 1. Clone repository
+git clone https://github.com/pranavpai/Trading-Agent-with-MCPs.git
 cd Trading-Agent-with-MCPs
 
-# Clone the MCP-Trader server (required for technical analysis)
-git clone https://github.com/wshobson/mcp-trader.git
+# 2. Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 3. Set up environment
+cp .env.example .env
+# Edit .env with your API keys (see Configuration section below)
+
+# 4. Install dependencies
+uv sync
+
+# 5. Set up MCP-Trader
+cd mcp-trader && cp .env.example .env && uv sync && uv build && cd ..
+
+# 6. Initialize system
+mkdir -p memory
+uv run python reset.py
+
+# 7. Launch services
+uv run python app.py &           # Dashboard
+uv run python trading_floor.py & # Trading engine
+
+# 8. Open dashboard
+open http://127.0.0.1:7860
 ```
 
-> 📝 **Note**: The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) provides essential technical analysis tools for our AI agents.
+### 🛠️ **Detailed Setup Instructions**
 
-#### 2️⃣ **Install UV (if needed)**
+<details>
+<summary><b>📦 Installing UV Package Manager</b></summary>
+
 ```bash
 # macOS/Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -165,48 +143,34 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 # Or via pip
 pip install uv
 ```
+</details>
 
-#### 3️⃣ **Set Up Environment**
+<details>
+<summary><b>🔧 MCP-Trader Setup</b></summary>
+
+The [MCP-Trader server](https://github.com/wshobson/mcp-trader) by [@wshobson](https://github.com/wshobson) is included in this repository. Setup steps:
+
 ```bash
-# Copy environment template
-cp .env.example .env
-
-# Edit with your API keys
-nano .env  # or use your preferred editor
-```
-
-#### 4️⃣ **Install Dependencies**
-```bash
-# Sync all dependencies (fast!)
-uv sync
-
-# Verify installation
-uv run python -c "print('✅ Installation successful!')"
-```
-
-#### 5️⃣ **Set Up MCP-Trader**
-```bash
-# Navigate to MCP-Trader directory and set up
 cd mcp-trader
 cp .env.example .env
-# Add your Tiingo API key to mcp-trader/.env (same as main .env)
+# Add your Tiingo API key to mcp-trader/.env
 uv sync
-# Build the MCP-Trader package (CRITICAL STEP!)
-uv build
-cd ..  # Return to main directory
+uv build  # CRITICAL: This builds the MCP-Trader package
+cd ..
 ```
+</details>
 
-#### 6️⃣ **Create Required Directories**
+<details>
+<summary><b>💾 Database Initialization</b></summary>
+
 ```bash
-# Create memory directory for trader databases
+# Create required directories
 mkdir -p memory
-```
 
-#### 7️⃣ **Initialize Database**
-```bash
-# Reset/initialize trading accounts
+# Initialize trading accounts ($10,000 each)
 uv run python reset.py
 ```
+</details>
 
 ---
 
@@ -292,31 +256,19 @@ graph TB
 
 ## 🤖 AI Trading Agents
 
-Each agent has a unique personality and trading approach:
+Four unique AI personalities trade autonomously with distinct strategies:
 
-### 👨‍💼 **Warren - The Value Investor**
-- **Philosophy**: "Price is what you pay, value is what you get"
-- **Strategy**: Long-term value investing, dividend stocks, defensive picks
-- **Tools**: Fundamental analysis + technical confirmation
-- **Risk**: Conservative, focuses on preserving capital
+| Agent | Style | Focus | Risk Profile |
+|-------|-------|-------|--------------|
+| 👨‍💼 **Warren** | Value Investor | Long-term value, dividends | Conservative |
+| 🎯 **George** | Contrarian | Macro trades, bold bets | Aggressive |
+| 📊 **Ray** | Systematic | Diversified ETFs, risk-parity | Balanced |
+| 🚀 **Cathie** | Innovator | Growth stocks, crypto, tech | High volatility |
 
-### 🎯 **George - The Contrarian**
-- **Philosophy**: "Be greedy when others are fearful"
-- **Strategy**: Contrarian plays, macro trades, bold bets
-- **Tools**: Sentiment analysis + oversold technical signals
-- **Risk**: Aggressive, wide stops for contrarian positions
-
-### 📊 **Ray - The Systematic**
-- **Philosophy**: "Systematic rules remove emotion from trading"
-- **Strategy**: Diversified ETFs, risk-parity, systematic rebalancing
-- **Tools**: Technical indicators + systematic entry/exit rules
-- **Risk**: Balanced, risk-adjusted position sizing
-
-### 🚀 **Cathie - The Innovator**
-- **Philosophy**: "Innovation creates explosive growth opportunities"
-- **Strategy**: Growth stocks, crypto, breakthrough technologies
-- **Tools**: Momentum analysis + innovation thesis research
-- **Risk**: High volatility tolerance, innovation-focused stops
+Each agent uses:
+- **Professional Analysis**: Technical indicators, pattern recognition, fundamental research
+- **Risk Management**: Position sizing, stop losses, portfolio diversification
+- **Adaptive Strategies**: Market condition awareness, dynamic rebalancing
 
 ---
 
@@ -337,7 +289,6 @@ Get your free API keys from these providers:
 | 🤖 **OpenAI** | AI trading agents | [Get API Key](https://platform.openai.com/account/api-keys) | ✅ **Yes** |
 | 📊 **Polygon.io** | Real-time market data | [Get API Key](https://polygon.io/dashboard/api-keys) | ✅ **Yes** |
 | 💹 **Tiingo** | Technical analysis data | [Get API Key](https://api.tiingo.com/) | ✅ **Yes** |
-| 📈 **MCP-Trader** | Technical analysis server | [Setup Guide](https://github.com/wshobson/mcp-trader#setup) | ✅ **Yes** |
 | 🔍 **Brave Search** | Market research | [Get API Key](https://api.search.brave.com/) | ✅ **Yes** |
 | 📱 **Pushover** | Mobile notifications | [Get Credentials](https://pushover.net/) | ⚪ Optional |
 
@@ -408,6 +359,28 @@ RUN_EVERY_N_MINUTES=30 uv run python trading_floor.py
 uv run python trading_floor.py
 ```
 
+### 🛑 **Stopping Services**
+
+```bash
+# Stop all Python processes
+pkill -f "python"
+
+# Or stop specific services
+pkill -f "app.py"           # Stop dashboard only
+pkill -f "trading_floor.py" # Stop trading engine only
+
+# Check if services are still running
+ps aux | grep -E "(app\.py|trading_floor\.py)" | grep -v grep
+```
+
+### 💻 **System Requirements**
+
+- **RAM**: 4GB minimum (8GB recommended)
+- **Storage**: 1GB free space
+- **CPU**: 2+ cores recommended
+- **Network**: Stable internet connection for API access
+- **OS**: macOS, Linux, or Windows with WSL
+
 ### 📊 **Testing & Development**
 
 ```bash
@@ -459,54 +432,19 @@ uvx --version
 
 ## 🛠️ MCP Servers
 
-The system uses **Model Context Protocol (MCP)** servers for modular functionality:
+The system uses **Model Context Protocol (MCP)** servers for modular functionality. See the [System Architecture](#️-system-architecture) section above for a detailed overview of how these servers interact.
 
 ### 📈 **MCP-Trader** (by [@wshobson](https://github.com/wshobson))
 
 > 🙏 **Credit**: This project uses the excellent [MCP-Trader server](https://github.com/wshobson/mcp-trader) created by [@wshobson](https://github.com/wshobson) for technical analysis capabilities.
 
-```python
-# Technical analysis tools (provided by MCP-Trader)
-analyze_stock(symbol, timeframe)     # Full technical analysis
-analyze_crypto(symbol)               # Cryptocurrency analysis  
-relative_strength(symbol, benchmark) # Performance comparison
-volume_profile(symbol)               # Support/resistance levels
-detect_patterns(symbol)              # Chart pattern recognition
-position_size(capital, volatility)   # Risk-based position sizing
-suggest_stops(symbol, entry_price)   # Stop loss recommendations
-```
-
-**Features provided by MCP-Trader:**
+MCP-Trader provides comprehensive technical analysis tools including:
 - 📊 **Technical Indicators**: RSI, MACD, Bollinger Bands, Moving Averages
 - 📈 **Pattern Recognition**: Support/resistance, trend analysis
 - 💰 **Risk Management**: Position sizing, stop loss suggestions
 - 🔄 **Multiple Data Sources**: Tiingo, Binance APIs with fallback support
-- ⚡ **FastMCP Resources**: Direct market data access via `stock://` and `crypto://` URIs
 
-### 💰 **Accounts Server**
-```python
-# Account management
-get_balance(account_name)            # Current cash balance
-get_holdings(account_name)           # Current positions
-buy_shares(account, symbol, qty)     # Execute buy order
-sell_shares(account, symbol, qty)    # Execute sell order
-list_transactions(account)           # Transaction history
-```
-
-### 📊 **Market Data Server**
-```python
-# Market information
-get_share_price(symbol)              # Current stock price
-get_market_status()                  # Market open/closed status
-get_company_info(symbol)             # Basic company data
-```
-
-### 📱 **Push Notification Server**
-```python
-# Alert system
-send_push_notification(message)     # Mobile alerts
-send_trading_alert(trade_details)   # Trade-specific notifications
-```
+For detailed MCP-Trader documentation and available tools, see the [mcp-trader README](./mcp-trader/README.md).
 
 ---
 
@@ -537,7 +475,7 @@ We welcome contributions! Here's how to get started:
 
 ```bash
 # 1. Fork the repository
-git clone https://github.com/your-username/Trading-Agent-with-MCPs.git
+git clone https://github.com/pranavpai/Trading-Agent-with-MCPs.git
 
 # 2. Create a feature branch
 git checkout -b feature/amazing-new-feature
